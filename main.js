@@ -6,10 +6,8 @@ const noBtn = document.querySelector(".no-btn");
 const btnGrp = document.querySelector(".btn-group");
 
 yesBtn.addEventListener("click", () => {
-  question.innerHTML = "I'm SORRY 🥺";                    // ✅ FIXED
+  question.innerHTML = "I'm SORRY 🥺";
   gif.src = "images/sorry.png";
-  gif.style.height = "300px";
-  gif.style.width = "400px";
   noBtn.innerHTML = "Nahi";
   yesBtn.innerHTML = "Achha theek hai";
 
@@ -60,22 +58,40 @@ yesBtn.addEventListener("click", () => {
           noBtn.style.display = "none";
         })
 
-        // "No" button par hover effect (bhaagta hai)
-        yesBtn.addEventListener("mouseover", () => {
-          const yesBtnRect = yesBtn.getBoundingClientRect();
+        // 🏃 "No" button par hover — bhaagta hai (responsive-safe)
+        function makeYesBtnRun() {
+          const btnRect = yesBtn.getBoundingClientRect();
+          const margin = 20;
           const screenWidth = window.innerWidth;
           const screenHeight = window.innerHeight;
-          const margin = 50;
 
-          const maxX = screenWidth - yesBtnRect.width - margin * 2;
-          const maxY = screenHeight - yesBtnRect.height - margin * 2;
+          // Ensure button stays inside screen
+          const maxX = screenWidth - btnRect.width - margin;
+          const maxY = screenHeight - btnRect.height - margin;
 
-          const randomX = Math.max(margin, Math.floor(Math.random() * maxX)) + margin;
-          const randomY = Math.max(margin, Math.floor(Math.random() * maxY)) + margin;
+          // Random position
+          const randomX = Math.max(margin, Math.random() * maxX);
+          const randomY = Math.max(margin, Math.random() * maxY);
 
           yesBtn.style.left = randomX + "px";
           yesBtn.style.top = randomY + "px";
+        }
+
+        // Touch & Mouse dono ke liye
+        yesBtn.addEventListener("mouseover", () => {
+          if (!yesBtn.classList.contains("flying")) {
+            yesBtn.classList.add("flying");
+          }
+          makeYesBtnRun();
         });
+
+        yesBtn.addEventListener("touchstart", (e) => {
+          e.preventDefault();
+          if (!yesBtn.classList.contains("flying")) {
+            yesBtn.classList.add("flying");
+          }
+          makeYesBtnRun();
+        }, { passive: false });
       });
     });
   });
